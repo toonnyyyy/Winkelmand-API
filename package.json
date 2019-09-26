@@ -1,7 +1,7 @@
 {
   "name": "winkelmand-api",
   "version": "1.0.0",
-  "description": "Winkelmand",
+  "description": "Intervisiegroep 3, School H-SE-WA Iteratie 2 opdracht Winkelmand backend",
   "main": "app.js",
   "dependencies": {
     "dotenv": "^8.1.0",
