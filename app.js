@@ -3,7 +3,13 @@ const app = express()
 const mysql = require('mysql')
 const morgan = require('morgan')
 const dotenv = require('dotenv').config();
+var path = require('path');
+var bodyParser = require('body-parser');
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
 app.use(morgan('short'))
 
 const connection = mysql.createConnection({
@@ -18,22 +24,122 @@ app.listen(3003, () => {
     console.log("Server is running on port 3003")
 })
 
+let api_url = '/shoppingcart/api/v1'
+
 // Root route
 app.get("/", (req, res) => {
-    res.send("Hoofd route")
+    res.sendFile(path.join(__dirname + '/views/home.html'));
 })
 
-app.get("/klanten", (req, res) => {
-    const queryString = "SELECT * FROM klanten"
-    connection.query(queryString, (error, rows, fields) => {
-        if (error) {
-            console.log("Fout bij het ophalen van klant gegevens: " + error)
-            res.sendStatus(500)
-            return
-        }
+// Get all customers
+app.get(api_url + "/customers", (req, res) => {
 
-        res.json(rows)
-        console.log(error)
-        console.log('test')
-    })
+    const queryString = "SELECT * FROM customer"
+
+    connection.query(queryString, (error, rows) => {
+        if (error) {
+            return res.status(500).send({
+                error: true,
+                message: 'Database error',
+                message: error
+            });
+        }
+        return res.status(200).send(rows);
+    });
+})
+
+// Get customer by id
+app.get(api_url + "/customers/:id", (req, res) => {
+
+    let customer_id = req.params.id;
+
+    const queryString = "SELECT * FROM customer where customer_id=?"
+
+    if (!customer_id) {
+        return res.status(400).send({
+            error: true,
+            message: 'Please provide customer id'
+        });
+    }
+
+    connection.query(queryString, customer_id, (error, rows) => {
+        if (error) {
+            return res.status(500).send({
+                error: true,
+                message: 'Database error',
+                message: error
+            });
+        }
+        return res.status(200).send(rows);
+    });
+})
+
+// Create new customer
+app.post(api_url + "/customers", (req, res) => {
+
+    console.log(req.body)
+
+    const queryString = 'INSERT INTO customer SET name = ?, email = ?, street = ?, zipcode = ?'
+
+    connection.query(queryString, [req.body.name, req.body.email, req.body.street, req.body.zipcode, req.body.customer_id], (error) => {
+        if (error) {
+            return res.status(500).send({
+                error: true,
+                message: 'Database error',
+                message: error
+            });
+        }
+        return res.status(200).send({
+            message: 'Customer has been succesfully created.'
+        });
+    });
+})
+
+//Update customer by id
+app.put(api_url + "/customers", (req, res) => {
+
+    console.log(req.body)
+
+    const queryString = 'UPDATE customer SET name = ?, email = ?, street = ?, zipcode = ? where customer_id = ?'
+
+    connection.query(queryString, [req.body.name, req.body.email, req.body.street, req.body.zipcode, req.body.customer_id], (error) => {
+        if (error) {
+            return res.status(500).send({
+                error: true,
+                message: 'Database error',
+                message: error
+            });
+        }
+        return res.status(200).send({
+            message: 'Customer has been succesfully updatet.'
+        });
+    });
+})
+
+//Delete customer by id
+app.delete(api_url + "/customers/:id", (req, res) => {
+
+    let customer_id = req.params.id;
+
+    const queryString = 'DELETE FROM customer WHERE customer_id = ?'
+
+    if (!customer_id) {
+        return res.status(400).send({
+            error: true,
+            message: 'Please provide customer id'
+        });
+    }
+
+    connection.query(queryString, customer_id, (error) => {
+        if (error) {
+            return res.status(500).send({
+                error: true,
+                message: 'Database error',
+                message: error
+            });
+        }
+        return res.status(200).send({
+            message: 'Customer has been succesfully deleted.'
+        });
+    });
 })
