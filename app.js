@@ -90,32 +90,6 @@ app.get(api_url_customer + "/customers/:id", (req, res) => {
     });
 })
 
-// Get customer by name
-app.get(api_url_customer + "/customers/:name", (req, res) => {
-
-    let customer_id = req.params.name;
-
-    const queryString = "SELECT * FROM customer where name = ?"
-
-    if (!customer_id) {
-        return res.status(400).send({
-            error: true,
-            message: 'Please provide customer name'
-        });
-    }
-
-    connection.query(queryString, customer_id, (error, rows) => {
-        if (error) {
-            return res.status(500).send({
-                error: true,
-                message: 'Database error',
-                message: error
-            });
-        }
-        return res.status(200).send(rows);
-    });
-})
-
 // Create new customer
 app.post(api_url_customer + "/customers", (req, res) => {
 
