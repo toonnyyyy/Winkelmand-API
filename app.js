@@ -81,7 +81,7 @@ app.post(api_url + "/customers", (req, res) => {
 
     const queryString = 'INSERT INTO customer SET name = ?, email = ?, city = ?, zipcode = ?, street = ?, house_number = ?, addition = ?, lc_dt = NOW(), cr_dt = NOW()'
 
-    connection.query(queryString, [req.body.name, req.body.email, req.body.street, req.body.zipcode, req.body.customer_id], (error) => {
+    connection.query(queryString, [req.body.name, req.body.email, req.body.city, req.body.zipcode, req.body.street, req.body.house_number, req.body.addition], (error) => {
         if (error) {
             return res.status(500).send({
                 error: true,
