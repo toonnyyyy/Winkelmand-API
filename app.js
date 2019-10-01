@@ -1,38 +1,54 @@
-const express = require('express')
-const app = express()
-const mysql = require('mysql')
-const morgan = require('morgan')
-const dotenv = require('dotenv').config();
-var path = require('path');
-var bodyParser = require('body-parser');
+//Express framework that helps build an API
+const express = require('express');
+const app = express();
 
+// To create a MySQL database connection
+const mysql = require('mysql');
+
+// Morgan is used to log incoming HTTP requests
+const morgan = require('morgan');
+app.use(morgan('short'));
+
+// Use environment variables to prevent leaking database information
+const dotenv = require('dotenv').config();
+
+// Set default path 
+var path = require('path');
+
+// Read body data that is send by the client.
+// Example: req.body.name
+var bodyParser = require('body-parser');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
     extended: true
-}))
-app.use(morgan('short'))
+}));
 
+// Create database connection
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE
-})
+});
 
-//Express server op port 3003
+//Express server is listining on port 3003
 app.listen(3003, () => {
     console.log("Server is running on port 3003")
-})
+});
 
-let api_url = '/shoppingcart/api/v1'
+// Default API url with version number
+let api_url_customer = '/shoppingcart/api/v1/customer-management';
+let api_url_cart = '/shoppingcart/api/v1/cart-management';
 
-// Root route
-app.get("/", (req, res) => {
+// Root route. This show a home page.
+app.get("/", (res) => {
     res.sendFile(path.join(__dirname + '/views/home.html'));
 })
 
+// Customers API
+
 // Get all customers
-app.get(api_url + "/customers", (req, res) => {
+app.get(api_url_customer + "/customers", (req, res) => {
 
     const queryString = "SELECT * FROM customer"
 
@@ -49,7 +65,7 @@ app.get(api_url + "/customers", (req, res) => {
 })
 
 // Get customer by id
-app.get(api_url + "/customers/:id", (req, res) => {
+app.get(api_url_customer + "/customers/:id", (req, res) => {
 
     let customer_id = req.params.id;
 
@@ -74,8 +90,34 @@ app.get(api_url + "/customers/:id", (req, res) => {
     });
 })
 
+// Get customer by name
+app.get(api_url_customer + "/customers/:name", (req, res) => {
+
+    let customer_id = req.params.name;
+
+    const queryString = "SELECT * FROM customer where name = ?"
+
+    if (!customer_id) {
+        return res.status(400).send({
+            error: true,
+            message: 'Please provide customer name'
+        });
+    }
+
+    connection.query(queryString, customer_id, (error, rows) => {
+        if (error) {
+            return res.status(500).send({
+                error: true,
+                message: 'Database error',
+                message: error
+            });
+        }
+        return res.status(200).send(rows);
+    });
+})
+
 // Create new customer
-app.post(api_url + "/customers", (req, res) => {
+app.post(api_url_customer + "/customers", (req, res) => {
 
     console.log(req.body)
 
@@ -96,9 +138,7 @@ app.post(api_url + "/customers", (req, res) => {
 })
 
 //Update customer by id
-app.put(api_url + "/customers", (req, res) => {
-
-    console.log(req.body)
+app.put(api_url_customer + "/customers", (req, res) => {
 
     const queryString = 'UPDATE customer SET name = ?, email = ?, city = ?, zipcode = ?, street = ?, house_number = ?, addition = ?, lc_dt = NOW() where customer_id = ?'
 
@@ -111,13 +151,13 @@ app.put(api_url + "/customers", (req, res) => {
             });
         }
         return res.status(200).send({
-            message: 'Customer has been succesfully updatet.'
+            message: 'Customer has been succesfully updated.'
         });
     });
 })
 
 //Delete customer by id
-app.delete(api_url + "/customers/:id", (req, res) => {
+app.delete(api_url_customer + "/customers/:id", (req, res) => {
 
     let customer_id = req.params.id;
 
@@ -143,3 +183,8 @@ app.delete(api_url + "/customers/:id", (req, res) => {
         });
     });
 })
+
+
+// Cart API
+
+// TODO
