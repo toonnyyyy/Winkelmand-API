@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var Customer=require('../models/customer');
+var customer=require('../models/customer');
  
 router.get('/:id?',function(req,res,next){
   if(req.params.id){
-      Customer.getCustomerById(req.params.id,function(err,rows){     
+      customer.getCustomerById(req.params.id,function(err,rows){     
           if(err) {
             res.json(err);
           }
@@ -20,7 +20,7 @@ router.get('/:id?',function(req,res,next){
       });
    }
    else{
-      Customer.getAllCustomers(function(err,rows){         
+      customer.getAllCustomers(function(err,rows){         
           if(err){
             res.json(err);
           }
@@ -32,7 +32,7 @@ router.get('/:id?',function(req,res,next){
 });
  
 router.post('/',function(req,res,next){
-  Customer.addCustomer(req.body,function(err){
+  customer.addCustomer(req.body,function(err){
     if(err){
       res.json(err);
     }
@@ -45,7 +45,7 @@ router.post('/',function(req,res,next){
 });
 
 router.put('/:id',function(req,res,next){ 
-  Customer.updateCustomer(req.params.id,req.body,function(err,rows){     
+  customer.updateCustomer(req.params.id,req.body,function(err,rows){     
     if(err){
       res.json(err);
     }
@@ -64,7 +64,7 @@ router.put('/:id',function(req,res,next){
 });
  
 router.delete('/:id',function(req,res,next){
-  Customer.deleteCustomer(req.params.id,function(err,rows){
+  customer.deleteCustomer(req.params.id,function(err,rows){
     if(err){
       res.json(err);
     }

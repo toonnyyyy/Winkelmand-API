@@ -1,7 +1,7 @@
 //reference of dbconnection.js
-var db=require('../dbconnection'); 
+var db = require('../dbconnection'); 
  
-var customer={
+var customer = {
  
 	getAllCustomers:function(callback){
 		return db.query("SELECT * FROM customer",callback);
@@ -24,4 +24,4 @@ var customer={
 	}
 
 };
-module.exports=customer;
+module.exports = customer;
