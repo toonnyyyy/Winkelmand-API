@@ -11,20 +11,16 @@ var Customer={
 		return db.query("SELECT * FROM customer where customer_id=?",[id],callback);
 	},
 
-	getTaskById:function(id,callback){
-		return db.query("select * from task where Id=?",[id],callback);
+	addCustomer:function(Customer,callback){
+		return db.query("INSERT INTO customer SET name = ?, email = ?, lc_dt = NOW(), cr_dt = NOW()",[Customer.name,Customer.email],callback);
 	},
 
-	addTask:function(Customer,callback){
-		return db.query("Insert into task values(?,?,?)",[Customer.Id,Customer.Title,Customer.Status],callback);
+	updateCustomer:function(id,Customer,callback){
+		return db.query("UPDATE customer SET name = ?, email = ?, lc_dt = NOW() where customer_id = ?",[Customer.name,Customer.email,id],callback);
 	},
 
-	deleteTask:function(id,callback){
-		return db.query("delete from task where Id=?",[id],callback);
-	},
-
-	updateTask:function(id,Customer,callback){
-		return db.query("update task set Title=?,Status=? where Id=?",[Customer.Title,Customer.Status,id],callback);
+	deleteCustomer:function(id,callback){
+		return db.query("DELETE FROM customer WHERE customer_id = ?",[id],callback);
 	}
 
 };

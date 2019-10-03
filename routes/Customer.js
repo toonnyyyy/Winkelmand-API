@@ -9,7 +9,13 @@ router.get('/:id?',function(req,res,next){
               res.json(err);
             }
             else{
-            res.json(rows);
+              if(rows == 0){
+                return res.status(400).send({
+                  message: 'This customer does not exist.'
+                });
+              } else {
+                res.json(rows);
+              }
             }
         });
      }
@@ -19,46 +25,64 @@ router.get('/:id?',function(req,res,next){
               res.json(err);
             }
             else{
-            res.json(rows);
+              res.json(rows);
             }
         });
      }
 });
  
 router.post('/',function(req,res,next){
-    Customer.addTask(req.body,function(err,count){
+    Customer.addCustomer(req.body,function(err){
       if(err){
         res.json(err);
       }
       else{
-        res.json(req.body);
-        //or return count for 1 &amp;amp;amp; 0
+        return res.status(200).send({
+            message: 'Customer has been succesfully created.'
+        });
+      }
+    });
+ });
+
+router.put('/:id',function(req,res,next){ 
+    Customer.updateCustomer(req.params.id,req.body,function(err,rows){     
+      if(err){
+        res.json(err);
+      }
+      else{
+        if(rows.affectedRows == 0){
+          return res.status(400).send({
+            message: 'This customer does not exist.'
+          });
+        } else {
+          return res.status(200).send({
+              message: 'Customer has been succesfully updated.'
+          });
+        }
       }
     });
  });
  
  
 router.delete('/:id',function(req,res,next){
-    Customer.deleteTask(req.params.id,function(err,count){
+    Customer.deleteCustomer(req.params.id,function(err,rows){
       if(err){
         res.json(err);
       }
       else{
-        res.json(count);
+        if(rows.affectedRows == 0){
+          return res.status(400).send({
+            message: 'This customer does not exist.'
+          });
+        } else {
+          return res.status(200).send({
+              message: 'Customer has been succesfully deleted.'
+          });
+        }
       }     
     });
  });
  
  
-router.put('/:id',function(req,res,next){ 
-    Customers.updateTask(req.params.id,req.body,function(err,rows){     
-      if(err){
-        res.json(err);
-      }
-      else{
-        res.json(rows);
-      }
-    });
- });
  
  module.exports=router;
