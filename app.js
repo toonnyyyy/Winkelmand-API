@@ -4,10 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var cors=require('cors');
+var cors = require('cors');
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var Customer=require('./routes/Customer');
+var customer = require('./routes/customer');
 var app = express();
  
 // view engine setup
@@ -24,13 +23,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Define the URL structure
-let apiVersion = '/v1';
+let apiVersion = '/v2';
 let urlRoot = '/shoppingcart/api' + apiVersion;
 let urlCustomer = '/customer-management/customer';
 
 app.use('/', routes);
-app.use('/users', users);
-app.use(urlRoot + urlCustomer,Customer);
+app.use(urlRoot + urlCustomer,customer);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

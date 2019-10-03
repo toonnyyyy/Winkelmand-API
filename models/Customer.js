@@ -1,7 +1,7 @@
 //reference of dbconnection.js
 var db=require('../dbconnection'); 
  
-var Customer={
+var customer={
  
 	getAllCustomers:function(callback){
 		return db.query("SELECT * FROM customer",callback);
@@ -11,12 +11,12 @@ var Customer={
 		return db.query("SELECT * FROM customer where customer_id=?",[id],callback);
 	},
 
-	addCustomer:function(Customer,callback){
-		return db.query("INSERT INTO customer SET name = ?, email = ?, lc_dt = NOW(), cr_dt = NOW()",[Customer.name,Customer.email],callback);
+	addCustomer:function(customer,callback){
+		return db.query("INSERT INTO customer SET name = ?, email = ?, lc_dt = NOW(), cr_dt = NOW()",[customer.name,customer.email],callback);
 	},
 
-	updateCustomer:function(id,Customer,callback){
-		return db.query("UPDATE customer SET name = ?, email = ?, lc_dt = NOW() where customer_id = ?",[Customer.name,Customer.email,id],callback);
+	updateCustomer:function(id,customer,callback){
+		return db.query("UPDATE customer SET name = ?, email = ?, lc_dt = NOW() where customer_id = ?",[customer.name,customer.email,id],callback);
 	},
 
 	deleteCustomer:function(id,callback){
@@ -24,4 +24,4 @@ var Customer={
 	}
 
 };
-module.exports=Customer;
+module.exports=customer;
