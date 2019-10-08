@@ -70,12 +70,38 @@ router.delete('/:id',function(req,res,next){
                message: 'This product does not exist.'
             });
          } else {
-            return res.status(200).send({
-               message: 'Product has been succesfully deleted.'
+           //niksdoen
+         }
+      }
+   });
+
+   product.deleteCartOrder(req.params.id, function(err, rows) {
+      if (err) {
+         // Er gaat was mis. Doe maar niks
+         // In develop mode zou je hier fout code kunnen dumpen.
+      } else {
+         if(rows.affectedRows > 0){
+            product.getCartIds(rows, function(err, rows) {
+               if (rows.length > 0) {
+                  product.deleteCart(rows, function( err, rows) {
+                     if (err) {
+                        // Er gaat was mis. Doe maar niks
+                        // In develop mode zou je hier fout code kunnen dumpen.
+                        // return res.status(404).send({
+                        //    message: err.toString()
+                        // });
+                     }
+                  });
+               }
             });
          }
       }
    });
+
+   return res.status(200).send({
+      message: 'Product has been succesfully deleted.'
+   });
+
 });
- 
+
 module.exports=router;
