@@ -3,10 +3,6 @@ var db = require('../dbconnection');
  
 var cart = {
  
-	//getAllCarts:function(callback){
-	//	return db.query("SELECT * FROM cart",callback);
-	//},
-
 	getCartOrderByCustomerId:function(id, callback){
         return db.query("SELECT cart.*, SUM(cart_order.total_price) AS total_cart_price " +
             "FROM customer " +
@@ -38,6 +34,10 @@ var cart = {
         return db.query("UPDATE cart_order SET amount = ?, total_price = ?, lc_dt = NOW() " +
             "WHERE cart_id = ? AND product_id = ?",[amount, amount * unit_price, cart_id, product_id],callback);
     },
+	
+	deleteCart_orderByCartProductId:function(id, callback) {
+		return db.query("DELETE FROM cart WHERE cart_id=?",[id],callback);
+	},
 	
 	deleteCartByCartId:function(id, callback) {
 		return db.query("DELETE FROM cart WHERE cart_id=?",[id],callback);
