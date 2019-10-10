@@ -43,4 +43,4 @@ var cart = {
 
 };
 
-module.exports = product;
+module.exports = cart;
