@@ -37,10 +37,6 @@ var cart = {
 	
 	deleteCart_orderByCartProductId:function(id, callback) {
 		return db.query("DELETE FROM cart WHERE cart_id=?",[id],callback);
-	},
-	
-	deleteCartByCartId:function(id, callback) {
-		return db.query("DELETE FROM cart WHERE cart_id=?",[id],callback);
 	}
 
 };
