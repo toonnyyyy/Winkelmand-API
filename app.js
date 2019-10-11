@@ -4,7 +4,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var routes = require('./routes/index');
 var customer = require('./routes/customer');
 var product = require('./routes/product');
 var app = express();
@@ -23,7 +22,6 @@ let urlRoot = '/shoppingcart/api' + apiVersion;
 let urlCustomer = '/customer-management/customer';
 let urlProduct = '/product';
 
-app.use('/', routes);
 app.use(urlRoot + urlCustomer,customer);
 app.use(urlRoot + urlProduct,product);
 
