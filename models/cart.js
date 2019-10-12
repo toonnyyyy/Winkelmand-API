@@ -1,6 +1,6 @@
 //reference of dbconnection.js
 var db = require('../dbconnection'); 
- 
+
 var cart = {
     
 	getCartOrderByCustomerId:function(id, callback){
@@ -13,15 +13,19 @@ var cart = {
     },
 
 	getCartByCartId:function(id, callback){
-		return db.query(`SELECT * FROM cart WHERE cart_id=?`,[id],callback);
+        return db.query(`SELECT cart.*, SUM(cart_order.total_price) AS total_cart_price
+            FROM cart
+            INNER JOIN cart_order ON cart_order.cart_id = cart.cart_id
+            WHERE cart.cart_id=?
+            GROUP BY cart.cart_id`,[id],callback);
     },
-
+    
     // for the creation of an empty cart
 	setCartByCustomerId:function(id, callback){
-		return db.query(`INSERT INTO cart (customer_id)
-            VALUES (customer_id, lc_dt, cr_dt)`,[id],callback);
+		return db.query(`INSERT INTO cart (customer_id, lc_dt, cr_dt)
+            VALUES (customer_id, NOW(), NOW())`,[id],callback);
     },
-
+    
     // for the creation of entries in a cart
     setCart_orderByCart_orderId:function(cart_id, product_id, amount, callback){
         // get unit_price from product table; needed to calculate total_price
