@@ -21,7 +21,7 @@ app.use(cookieParser());
 // Define the URL structure
 let apiVersion = '/v1';
 let urlRoot = '/shoppingcart/api' + apiVersion;
-let urlCustomer = '/customer-management/customer';
+let urlCustomer = '/customer';
 let urlProduct = '/product';
 let urlCart = '/cart';
 
