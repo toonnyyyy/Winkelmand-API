@@ -63,7 +63,7 @@ router.post('/:id?',function(req,res,next) {
       }     
     });
     
-  } else if(req.body.id) {
+  } else if(req.body) {
     
     //setCart_orderByCart_orderId:function(cart_id, product_id, amount, callback) {
     cart.setCart_orderByCart_orderId(req.body, function(err,rows) {
@@ -88,7 +88,7 @@ router.post('/:id?',function(req,res,next) {
 
 //updateCart_orderByCart_orderId:function(cart_id, product_id, amount, callback) {
 router.put('/:id?',function(req,res,next) {
-  if(req.body.id) {
+  if(req.body) {
     cart.updateCart_orderByCart_orderId(req.body, function(err,rows) {
       if(err) {
         res.json(err);
