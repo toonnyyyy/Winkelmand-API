@@ -7,6 +7,7 @@ var cors = require('cors');
 var routes = require('./routes/index');
 var customer = require('./routes/customer');
 var product = require('./routes/product');
+var cart = require('./routes/cart');
 var app = express();
  
 
@@ -22,10 +23,12 @@ let apiVersion = '/v1';
 let urlRoot = '/shoppingcart/api' + apiVersion;
 let urlCustomer = '/customer-management/customer';
 let urlProduct = '/product';
+let urlCart = '/cart';
 
 app.use('/', routes);
 app.use(urlRoot + urlCustomer,customer);
 app.use(urlRoot + urlProduct,product);
+app.use(urlRoot + urlCart,cart);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
