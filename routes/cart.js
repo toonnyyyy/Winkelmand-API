@@ -179,6 +179,7 @@ router.delete('/:id?', function (req, res) {
   }
 });
 
+//delete cart order by cart id and product id
 router.delete('/:cart_id?/product/:product_id?', function (req, res) {
 
   if (req.params.cart_id) {
