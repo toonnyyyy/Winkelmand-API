@@ -63,8 +63,8 @@ var cart = {
         return db.query(`DELETE FROM cart WHERE cart_id=?`, [id], callback);
     },
 
-    deleteCartOrder: function (id, callback) {
-        return db.query(`DELETE FROM cart WHERE cart_id=?`, [id], callback);
+    deleteCartOrder: function (cart_id, product_id, callback) {
+        return db.query(`DELETE FROM cart_order WHERE cart_id=? AND product_id=?`, [cart_id, product_id], callback);
     }
 };
 

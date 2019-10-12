@@ -179,10 +179,12 @@ router.delete('/:id?', function (req, res) {
   }
 });
 
-router.delete('/:id?/product/:id?', function (req, res) {
-  if (req.params.id) {
-    cart.deleteCartOrder(req.params.id, function (err, rows) {
+router.delete('/:cart_id?/product/:product_id?', function (req, res) {
+  
+  if (req.params.cart_id) {
+    cart.deleteCartOrder(req.params.cart_id, req.params.product_id, function (err, rows) {
       if (err) {
+        console.log(err)
         return res.status(500).send({
           message: 'Error in de database'
         });
