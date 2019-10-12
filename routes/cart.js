@@ -151,30 +151,57 @@ router.put('/', function (req, res) {
   });
 });
 
-
-router.delete('/:id?', function (req, res, next) {
+//delete cart by cart id
+router.delete('/:id?', function (req, res) {
   if (req.params.id) {
-    cart.deleteCart_orderByCartProductId(req.params.id, function (err, rows) {
+    cart.deleteCartByCartId(req.params.id, function (err, rows) {
       if (err) {
-        res.json(err);
+        return res.status(500).send({
+          message: 'Error in de database'
+        });
       } else {
-        if (rows.affectedRows == 0) {
-          return res.status(404).send({
-            message: 'This cart does not exist.'
-          });
-        } else {
+        if (rows.affectedRows > 0) {
           return res.status(200).send({
             message: 'Cart has been succesfully deleted.'
+          });
+        } else {
+          return res.status(404).send({
+            message: 'Cart id not found'
           });
         }
       }
     });
-
   } else {
-
-    // no valid option specified
+    // No paramater given
     return res.status(404).send({
-      message: 'Invalid request: no data given. (delete)'
+      message: 'No parameter given'
+    });
+  }
+});
+
+router.delete('/:id?/product/:id?', function (req, res) {
+  if (req.params.id) {
+    cart.deleteCartOrder(req.params.id, function (err, rows) {
+      if (err) {
+        return res.status(500).send({
+          message: 'Error in de database'
+        });
+      } else {
+        if (rows.affectedRows > 0) {
+          return res.status(200).send({
+            message: 'Cart order has been succesfully deleted.'
+          });
+        } else {
+          return res.status(404).send({
+            message: 'Cart id or product id not found'
+          });
+        }
+      }
+    });
+  } else {
+    // No paramater given
+    return res.status(404).send({
+      message: 'No parameter given'
     });
   }
 });

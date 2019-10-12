@@ -59,10 +59,13 @@ var cart = {
         });
     },
 
-    deleteCart_orderByCartProductId: function (id, callback) {
+    deleteCartByCartId: function (id, callback) {
+        return db.query(`DELETE FROM cart WHERE cart_id=?`, [id], callback);
+    },
+
+    deleteCartOrder: function (id, callback) {
         return db.query(`DELETE FROM cart WHERE cart_id=?`, [id], callback);
     }
-
 };
 
 module.exports = cart;
