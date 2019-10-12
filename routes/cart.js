@@ -180,7 +180,7 @@ router.delete('/:id?', function (req, res) {
 });
 
 router.delete('/:cart_id?/product/:product_id?', function (req, res) {
-  
+
   if (req.params.cart_id) {
     cart.deleteCartOrder(req.params.cart_id, req.params.product_id, function (err, rows) {
       if (err) {
