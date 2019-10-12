@@ -29,61 +29,34 @@ var cart = {
     setCartOrderByCartId: function (cart, callback) {
         // get unit_price from product table; needed to calculate total_price
         db.query(`SELECT unit_price FROM product WHERE product_id=?`, [cart.product_id], function (err, result) {
-            if (err) {
-                
-            } else {
-                let unit_price = 0;
-                if (result.length > 0) {
-                    unit_price = result[0].unit_price;
-                }
-                return db.query(`INSERT INTO cart_order SET cart_id=?, product_id=?, amount=?,
-                total_price = amount * ?, lc_dt = NOW(), cr_dt = NOW()`,
-                    [cart.cart_id, cart.product_id, cart.amount, unit_price], callback);
+            let unit_price = 0;
+            if (result.length > 0) {
+                unit_price = result[0].unit_price;
             }
+            return db.query(`INSERT INTO cart_order SET cart_id=?, product_id=?, amount=?,
+                total_price = amount * ?, lc_dt = NOW(), cr_dt = NOW()`,
+                [cart.cart_id, cart.product_id, cart.amount, unit_price], callback);
         });
     },
     // Change amount if product already exists
     setAmountandTotalPriceIfProductExistsInCart: function (cart, callback) {
         // get unit_price from product table; needed to calculate total_price
         db.query(`SELECT unit_price FROM product WHERE product_id=?`, [cart.product_id], function (err, result) {
-            if (err) {
-
-            } else {
-                let unit_price = result[0].unit_price;
-                return db.query(`UPDATE cart_order SET amount=amount+?,
+            let unit_price = result[0].unit_price;
+            return db.query(`UPDATE cart_order SET amount=amount+?,
             total_price = amount * ?, lc_dt = NOW() WHERE cart_id = ? AND product_id = ?`,
-                    [cart.amount, unit_price, cart.cart_id, cart.product_id], callback);
-            }
+                [cart.amount, unit_price, cart.cart_id, cart.product_id], callback);
         });
     },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    updateCart_orderByCart_orderId: function (cart_id, product_id, amount, callback) {
+    updateCartOrderByCartId: function (cart, callback) {
         // get unit_price from product table; needed to calculate total_price
-        let unit_price = db.query(`SELECT unit_price FROM product WHERE product_id=?`, [product_id], callback);
-
-        return db.query(`UPDATE cart_order SET amount = ?, total_price = ?, lc_dt = NOW()
-            WHERE cart_id = ? AND product_id = ?`,
-            [amount, amount * unit_price, cart_id, product_id], callback);
+        db.query(`SELECT unit_price FROM product WHERE product_id=?`, [cart.product_id], function (err, result) {
+            let unit_price = result[0].unit_price;
+            return db.query(`UPDATE cart_order SET amount=?,
+            total_price = ? * ?, lc_dt = NOW() WHERE cart_id = ? AND product_id = ?`,
+                [cart.amount, cart.amount, unit_price, cart.cart_id, cart.product_id], callback);
+        });
     },
 
     deleteCart_orderByCartProductId: function (id, callback) {

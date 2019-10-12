@@ -18,7 +18,7 @@ router.get('/customer/:id?', function (req, res) {
       }
     });
   } else {
-    // no valid option specified
+    // no customer id specified
     return res.status(404).send({
       message: 'No id specified'
     });
@@ -78,7 +78,12 @@ router.post('/', function (req, res) {
         cart.setAmountandTotalPriceIfProductExistsInCart(req.body, function (err, rows) {
           if (err) {
             return res.status(500).send({
-              message: 'Error in de databasee'
+              message: 'Error in de database'
+            });
+            // mysql throws a warning when amount is not valid
+          } else if (rows.warningCount == 1) {
+            return res.status(404).send({
+              message: 'No valid input for amount'
             });
           } else if (rows.affectedRows > 0) {
             return res.status(200).send({
@@ -89,11 +94,11 @@ router.post('/', function (req, res) {
         // if product or shoppingcart does not exists
       } else if (err.code == 'ER_NO_REFERENCED_ROW_2') {
         return res.status(404).send({
-          message: 'Product or shoppingcart does not exists'
+          message: 'No valid input for product id or cart id'
         });
       } else {
         return res.status(500).send({
-          message: 'Error in de databaseee'
+          message: 'Error in de database'
         });
       }
     } else {
@@ -104,39 +109,74 @@ router.post('/', function (req, res) {
         });
       } else {
         return res.status(500).send({
-          message: 'Error in de databaseeee'
+          message: 'Error in de database'
         });
       }
     }
   });
 });
 
-// //deleteCart_orderByCartProductId:function(id, callback) {
-// router.delete('/:id?', function (req, res, next) {
-//   if (req.params.id) {
-//     cart.deleteCart_orderByCartProductId(req.params.id, function (err, rows) {
-//       if (err) {
-//         res.json(err);
-//       } else {
-//         if (rows.affectedRows == 0) {
-//           return res.status(404).send({
-//             message: 'This cart does not exist.'
-//           });
-//         } else {
-//           return res.status(200).send({
-//             message: 'Cart has been succesfully deleted.'
-//           });
-//         }
-//       }
-//     });
+//update cart order by cart id
+router.put('/', function (req, res) {
+  cart.updateCartOrderByCartId(req.body, function (err, rows) {
+    if (err) {
+      // if product or shoppingcart does not exists
+      if (err.code == 'ER_NO_REFERENCED_ROW_2') {
+        return res.status(404).send({
+          message: 'No valid input for product id or cart id'
+        });
+        // mysql throws a warning when amount is not valid
+      } else if (rows.warningCount == 1) {
+        return res.status(404).send({
+          message: 'No valid input for amount'
+        });
+      } else {
+        return res.status(500).send({
+          message: 'Error in de database'
+        });
+      }
+    } else {
+      //cart order has been succesfully updated
+      if (rows.affectedRows > 0) {
+        return res.status(200).send({
+          message: 'Cart has been succesfully updated'
+        });
+      } else {
+        // mysql sets affected rows to zero when input is incorrect
+        return res.status(404).send({
+          message: 'No valid input'
+        });
+      }
+    }
+  });
+});
 
-//   } else {
 
-//     // no valid option specified
-//     return res.status(404).send({
-//       message: 'Invalid request: no data given. (delete)'
-//     });
-//   }
-// });
+router.delete('/:id?', function (req, res, next) {
+  if (req.params.id) {
+    cart.deleteCart_orderByCartProductId(req.params.id, function (err, rows) {
+      if (err) {
+        res.json(err);
+      } else {
+        if (rows.affectedRows == 0) {
+          return res.status(404).send({
+            message: 'This cart does not exist.'
+          });
+        } else {
+          return res.status(200).send({
+            message: 'Cart has been succesfully deleted.'
+          });
+        }
+      }
+    });
+
+  } else {
+
+    // no valid option specified
+    return res.status(404).send({
+      message: 'Invalid request: no data given. (delete)'
+    });
+  }
+});
 
 module.exports = router;
