@@ -87,7 +87,7 @@ router.post('/:id?',function(req,res,next) {
 });
 
 //updateCart_orderByCart_orderId:function(cart_id, product_id, amount, callback) {
-router.put('/:id?',function(req,res,next) {
+router.put('/',function(req,res,next) {
   if(req.body) {
     cart.updateCart_orderByCart_orderId(req.body, function(err,rows) {
       if(err) {
@@ -104,7 +104,7 @@ router.put('/:id?',function(req,res,next) {
         }
       }     
     });
-
+    
   } else {
     
     // no valid option specified
