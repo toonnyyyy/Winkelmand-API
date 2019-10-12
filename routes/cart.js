@@ -2,88 +2,108 @@ var express = require('express');
 var router = express.Router();
 var cart = require('../models/cart');
  
-//getCartOrderByCustomerId:function(id, callback){
-router.get('/customer/:id?',function(req,res,next){
-  if(req.params.id){
-    cart.getCartOrderByCustomerId(function(err,rows){         
-      if(err){
+// all methods with GET request
+router.get('/customer/:id?',function(req,res,next) {
+  
+  //getCartOrderByCustomerId:function(id, callback) {
+  if(req.params.id) {
+    cart.getCartOrderByCustomerId(req.params.id, function(err,rows) {
+      if(err) {
         res.json(err);
-      }
-      else{
+      } else {
         res.json(rows);
       }
     });
   }
 });
 
-//getCartByCartId:function(id, callback){
-router.get('/:id?',function(req,res,next){
-  if(req.params.id){
-    cart.(function(err,rows){         
-      if(err){
+  //getCartByCartId:function(id, callback) {
+  router.get('/:id?',function(req,res,next) {
+    if(req.params.id) {
+      cart.getCartByCartId(req.params.id, function(err,rows) {
+        if(err) {
+          res.json(err);
+        } else {
+          res.json(rows);
+        }
+      });
+    }
+  });
+
+// all methods with POST request
+router.post('/:id?',function(req,res,next) {
+  if(req.params.id) {
+    
+    //setCartByCustomerId:function(id, callback) {
+    cart.setCartByCustomerId(req.params.id, function(err,rows) {
+      if(err) {
         res.json(err);
-      }
-      else{
-        res.json(rows);
+      } else {
+        return res.status(200).send({
+            message: 'Cart has been succesfully created.'
+        });
       }
     });
+    
+  } else if(req.body.id) {
+
+    //setCart_orderByCart_orderId:function(cart_id, product_id, amount, callback) {
+    cart.setCart_orderByCart_orderId(req.body, function(err,rows) {
+      if(err) {
+        res.json(err);
+      } else {
+        return res.status(200).send({
+            message: 'Cart has been succesfully created.'
+        });
+      }
+    });
+
+  } else {
+    
+    // no valid option specified
+    return res.status(404).send({
+      message: 'Invalid request: no data given.'
+    });
   }
+
 });
 
-//setCartByCustomerId:function(id, callback){
-router.post('/customer/:id?',function(req,res,next){
-  if(req.params.id){
-    cart.setCartByCustomerId(function(err,rows){         
-      if(err){
-        res.json(err);
+//updateCart_orderByCart_orderId:function(cart_id, product_id, amount, callback) {
+router.put('/:id?',function(req,res,next) {
+  cart.updateCart_orderByCart_orderId(req.body, function(err,rows) {
+    if(err) {
+      res.json(err);
+    } else {
+      if(rows.affectedRows == 0) {
+        return res.status(404).send({
+          message: 'This cart does not exist.'
+        });
+      } else {
+        return res.status(200).send({
+            message: 'Cart has been succesfully updated.'
+        });
       }
-      else{
-        res.json(rows);
-      }
-    });
-  }
-});
-
-//setCart_orderByCart_orderId:function(cart_id, product_id, amount, callback){
-router.post('/customer/:id?',function(req,res,next){
-  if(req.params.id){
-    cart.setCart_orderByCart_orderId(function(err,rows){         
-      if(err){
-        res.json(err);
-      }
-      else{
-        res.json(rows);
-      }
-    });
-  }
-});
-
-//updateCart_orderByCart_orderId:function(cart_id, product_id, amount, callback){
-router.post('/:id?',function(req,res,next){
-  if(req.params.id){
-    cart.updateCart_orderByCart_orderId(function(err,rows){         
-      if(err){
-        res.json(err);
-      }
-      else{
-        res.json(rows);
-      }
-    });
-  }
+    }
+  });
 });
 
 //deleteCart_orderByCartProductId:function(id, callback) {
-router.delete('/customer/:id?',function(req,res,next){
-  if(req.params.id){
-    cart.deleteCart_orderByCartProductId(function(err,rows){         
-      if(err){
-        res.json(err);
+router.delete('/:id?',function(req,res,next) {
+  cart.deleteCart_orderByCartProductId(req.params.id, function(err,rows) {
+    if(err) {
+      res.json(err);
+    } else {
+      if(rows.affectedRows == 0) {
+        return res.status(404).send({
+          message: 'This cart does not exist.'
+        });
+      } else {
+        return res.status(200).send({
+            message: 'Cart has been succesfully deleted.'
+        });
       }
-      else{
-        res.json(rows);
-      }
-    });
-  }
+    }     
+  });
 });
 
 module.exports=router;

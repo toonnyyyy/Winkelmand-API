@@ -2,7 +2,7 @@
 var db = require('../dbconnection'); 
  
 var cart = {
- 
+    
 	getCartOrderByCustomerId:function(id, callback){
         return db.query(`SELECT cart.*, SUM(cart_order.total_price) AS total_cart_price
             FROM customer
@@ -16,12 +16,15 @@ var cart = {
 		return db.query(`SELECT * FROM cart WHERE cart_id=?`,[id],callback);
     },
 
+    // for the creation of an empty cart
 	setCartByCustomerId:function(id, callback){
 		return db.query(`INSERT INTO cart (customer_id)
             VALUES (customer_id, lc_dt, cr_dt)`,[id],callback);
     },
 
+    // for the creation of entries in a cart
     setCart_orderByCart_orderId:function(cart_id, product_id, amount, callback){
+        // get unit_price from product table; needed to calculate total_price
         let unit_price = db.query(`SELECT unit_price FROM product WHERE product_id=?`,[product_id],callback);
         
         return db.query(`INSERT INTO cart_order SET cart_id =?, product_id = ?, amount = ?,
@@ -30,6 +33,7 @@ var cart = {
     },
     
     updateCart_orderByCart_orderId:function(cart_id, product_id, amount, callback){
+        // get unit_price from product table; needed to calculate total_price
         let unit_price = db.query(`SELECT unit_price FROM product WHERE product_id=?`,[product_id],callback);
         
         return db.query(`UPDATE cart_order SET amount = ?, total_price = ?, lc_dt = NOW()
