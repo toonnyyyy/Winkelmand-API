@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var cart = require('../models/cart');
- 
-// all methods with GET request
+
+//getCartOrderByCustomerId:function(id, callback) {
 router.get('/customer/:id?',function(req,res,next) {
-  
-  //getCartOrderByCustomerId:function(id, callback) {
   if(req.params.id) {
     cart.getCartOrderByCustomerId(req.params.id, function(err,rows) {
       if(err) {
@@ -17,18 +15,18 @@ router.get('/customer/:id?',function(req,res,next) {
   }
 });
 
-  //getCartByCartId:function(id, callback) {
-  router.get('/:id?',function(req,res,next) {
-    if(req.params.id) {
-      cart.getCartByCartId(req.params.id, function(err,rows) {
-        if(err) {
-          res.json(err);
-        } else {
-          res.json(rows);
-        }
-      });
-    }
-  });
+//getCartByCartId:function(id, callback) {
+router.get('/:id?',function(req,res,next) {
+  if(req.params.id) {
+    cart.getCartByCartId(req.params.id, function(err,rows) {
+      if(err) {
+        res.json(err);
+      } else {
+        res.json(rows);
+      }
+    });
+  }
+});
 
 // all methods with POST request
 router.post('/:id?',function(req,res,next) {
