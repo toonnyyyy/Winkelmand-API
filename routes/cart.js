@@ -17,7 +17,7 @@ router.get('/customer/:id?',function(req,res,next) {
     
     // no valid option specified
     return res.status(404).send({
-      message: 'Invalid request: no data given.'
+      message: 'Invalid request: no data given. (get)'
     });
   }
 });
@@ -37,7 +37,7 @@ router.get('/:id?',function(req,res,next) {
     
     // no valid option specified
     return res.status(404).send({
-      message: 'Invalid request: no data given.'
+      message: 'Invalid request: no data given. (get)'
     });
   }
 });
@@ -51,14 +51,20 @@ router.post('/:id?',function(req,res,next) {
       if(err) {
         res.json(err);
       } else {
-        return res.status(200).send({
-            message: 'Cart has been succesfully created.'
-        });
-      }
+        if(rows.affectedRows == 0) {
+          return res.status(404).send({
+            message: 'This customer does not exist.'
+          });
+        } else {
+          return res.status(200).send({
+              message: 'Cart has been succesfully set.'
+          });
+        }
+      }     
     });
     
   } else if(req.body.id) {
-
+    
     //setCart_orderByCart_orderId:function(cart_id, product_id, amount, callback) {
     cart.setCart_orderByCart_orderId(req.body, function(err,rows) {
       if(err) {
@@ -74,7 +80,7 @@ router.post('/:id?',function(req,res,next) {
     
     // no valid option specified
     return res.status(404).send({
-      message: 'Invalid request: no data given.'
+      message: 'Invalid request: no data given. (post)'
     });
   }
 
@@ -96,14 +102,14 @@ router.put('/:id?',function(req,res,next) {
               message: 'Cart has been succesfully updated.'
           });
         }
-      }
+      }     
     });
 
   } else {
     
     // no valid option specified
     return res.status(404).send({
-      message: 'Invalid request: no data given.'
+      message: 'Invalid request: no data given. (put)'
     });
   }
 });
@@ -131,7 +137,7 @@ router.delete('/:id?',function(req,res,next) {
     
     // no valid option specified
     return res.status(404).send({
-      message: 'Invalid request: no data given.'
+      message: 'Invalid request: no data given. (delete)'
     });
   }
 });

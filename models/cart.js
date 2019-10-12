@@ -13,7 +13,7 @@ var cart = {
     },
 
 	getCartByCartId:function(id, callback){
-        return db.query(`SELECT cart.*, SUM(cart_order.total_price) AS total_cart_price
+        return db.query(`SELECT cart.*, SUM(cart_order.total_price) AS  
             FROM cart
             INNER JOIN cart_order ON cart_order.cart_id = cart.cart_id
             WHERE cart.cart_id=?
@@ -22,8 +22,7 @@ var cart = {
     
     // for the creation of an empty cart
 	setCartByCustomerId:function(id, callback){
-		return db.query(`INSERT INTO cart (customer_id, lc_dt, cr_dt)
-            VALUES (customer_id, NOW(), NOW())`,[id],callback);
+        return db.query(`INSERT INTO cart SET customer_id =?, lc_dt =NOW(), cr_dt =NOW()`,[id],callback);
     },
     
     // for the creation of entries in a cart
