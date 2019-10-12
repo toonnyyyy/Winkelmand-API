@@ -4,6 +4,7 @@ var connection=mysql.createPool({
   user:'webuser@ig03restapi',
   password:'IG03database@',
   database:'shoppingcart',
-  ssl: true
+  ssl: true,
+  multipleStatements: true,
 });
 module.exports=connection;
