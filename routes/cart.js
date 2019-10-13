@@ -29,7 +29,7 @@ router.get('/customer/:id?', function (req, res) {
 });
 
 //get shoppingcart by cart id
-router.get('/:id?', function (req, res) {
+router.get('/cart/:id?', function (req, res) {
   if (req.params.id) {
     cart.getCartByCartId(req.params.id, function (err, rows) {
       if (err) {
@@ -74,92 +74,107 @@ router.post('/customer/:id?', function (req, res) {
   }
 });
 
-// Add product to shoppingcart. If the product already exists in the shoppingcart, 
+// add product to shoppingcart. If the product already exists in the shoppingcart, 
 // then change the amount and total price
-router.post('/', function (req, res) {
-  cart.setCartOrderByCartId(req.body, function (err, rows) {
-    if (err) {
-      // if product_id and cart_id already exists
-      if (err.code == 'ER_DUP_ENTRY') {
-        cart.setAmountandTotalPriceIfProductExistsInCart(req.body, function (err, rows) {
-          if (err) {
-            return res.status(500).send({
-              message: 'Error in de database.'
-            });
-            // mysql throws a warning when amount is not valid
-          } else if (rows.warningCount == 1) {
-            return res.status(404).send({
-              message: 'No valid input for amount.'
-            });
-          } else if (rows.affectedRows > 0) {
-            // change amount instead if product already exists
-            return res.status(200).send({
-              message: 'Product alreay exists in the cart, so the amount and total price was changed.'
-            });
-          }
-        })
-        // if product or shoppingcart does not exists
-      } else if (err.code == 'ER_NO_REFERENCED_ROW_2') {
-        return res.status(404).send({
-          message: 'No valid input for product id or cart id.'
-        });
+router.post('/cart', function (req, res) {
+  //check when amount is a negative amount.
+  if (req.body.amount <= 0) {
+    return res.status(404).send({
+      message: 'Negative amount is not allowed'
+    });
+  } else {
+    cart.setCartOrderByCartId(req.body, function (err, rows) {
+      if (err) {
+        // if product_id and cart_id already exists
+        if (err.code == 'ER_DUP_ENTRY') {
+          cart.setAmountandTotalPriceIfProductExistsInCart(req.body, function (err, rows) {
+            if (err) {
+              return res.status(500).send({
+                message: 'Error in de database.'
+              });
+              // mysql throws a warning when amount is not valid
+            } else if (rows.warningCount == 1) {
+              return res.status(404).send({
+                message: 'No valid input for amount.'
+              });
+            } else if (rows.affectedRows > 0) {
+              // change amount instead if product already exists
+              return res.status(200).send({
+                message: 'Product alreay exists in the cart, so the amount and total price was changed.'
+              });
+            }
+          })
+          // if product or shoppingcart does not exists
+        } else if (err.code == 'ER_NO_REFERENCED_ROW_2') {
+          return res.status(404).send({
+            message: 'Product or cart does not exist'
+          });
+        } else {
+          return res.status(500).send({
+            message: 'Error in de database.'
+          });
+        }
       } else {
-        return res.status(500).send({
-          message: 'Error in de database.'
-        });
+        // if product does not exists in the cart
+        if (rows.affectedRows > 0) {
+          return res.status(200).send({
+            message: 'Product and amount succesfully added to cart.'
+          });
+        } else {
+          return res.status(500).send({
+            message: 'Error in de database.'
+          });
+        }
       }
-    } else {
-      // if product does not exists in the cart
-      if (rows.affectedRows > 0) {
-        return res.status(200).send({
-          message: 'Product and amount succesfully added to cart.'
-        });
-      } else {
-        return res.status(500).send({
-          message: 'Error in de database.'
-        });
-      }
-    }
-  });
+    });
+  }
 });
 
 //update cart order by cart id
-router.put('/', function (req, res) {
-  cart.updateCartOrderByCartId(req.body, function (err, rows) {
-    if (err) {
-      // if product or shoppingcart does not exists
-      if (err.code == 'ER_NO_REFERENCED_ROW_2') {
-        return res.status(404).send({
-          message: 'No valid input for product id or cart id.'
-        });
-        // mysql throws a warning when amount is not valid
-      } else if (rows.warningCount == 1) {
-        return res.status(404).send({
-          message: 'No valid input for amount.'
-        });
+router.put('/cart', function (req, res) {
+
+  //check when amount is a negative amount.
+  if (req.body.amount <= 0) {
+    return res.status(404).send({
+      message: 'Negative amount is not allowed'
+    });
+  } else {
+    cart.updateCartOrderByCartId(req.body, function (err, rows) {
+      if (err) {
+        // if product or shoppingcart does not exists
+        if (err.code == 'ER_NO_REFERENCED_ROW_2') {
+          return res.status(404).send({
+            message: 'No valid input for product id or cart id.'
+          });
+          // mysql throws a warning when amount is not valid
+        } else if (rows.warningCount == 1) {
+          return res.status(404).send({
+            message: 'No valid input for amount.'
+          });
+        } else {
+          return res.status(500).send({
+            message: 'Error in de database.'
+          });
+        }
       } else {
-        return res.status(500).send({
-          message: 'Error in de database.'
-        });
+        //cart order has been succesfully updated
+        if (rows.affectedRows > 0) {
+          return res.status(200).send({
+            message: 'Cart has been succesfully updated.'
+          });
+        } else {
+          // mysql sets affected rows to zero when input is incorrect
+          return res.status(404).send({
+            message: 'Product or cart does not exist.'
+          });
+        }
       }
-    } else {
-      //cart order has been succesfully updated
-      if (rows.affectedRows > 0) {
-        return res.status(200).send({
-          message: 'Cart has been succesfully updated.'
-        });
-      } else {
-        // mysql sets affected rows to zero when input is incorrect
-        return res.status(404).send({
-          message: 'No valid input.'
-        });
-      }
-    }
-  });
+    });
+  }
 });
 
 //delete cart by cart id
-router.delete('/:id?', function (req, res) {
+router.delete('/cart/:id?', function (req, res) {
   if (req.params.id) {
     cart.deleteCartByCartId(req.params.id, function (err, rows) {
       if (err) {
@@ -173,7 +188,7 @@ router.delete('/:id?', function (req, res) {
           });
         } else {
           return res.status(404).send({
-            message: 'Cart id not found.'
+            message: 'Cart not found.'
           });
         }
       }
@@ -187,7 +202,7 @@ router.delete('/:id?', function (req, res) {
 });
 
 //delete cart order by cart id and product id
-router.delete('/:cart_id?/product/:product_id?', function (req, res) {
+router.delete('/cart/:cart_id?/product/:product_id?', function (req, res) {
 
   if (req.params.cart_id) {
     cart.deleteCartOrder(req.params.cart_id, req.params.product_id, function (err, rows) {
