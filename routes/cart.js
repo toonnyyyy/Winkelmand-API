@@ -46,7 +46,6 @@ router.get('/cart/:id?', function (req, res) {
         res.json(rows);
       }
     });
-
   } else {
     // no cart id specified
     return res.status(404).send({

@@ -2,10 +2,10 @@
 var db = require('../dbconnection');
 
 var reset = {
-   resetAll:function(callback){
+   resetAll: function (callback) {
       // delete alles van de tables en zet autoincrement op 1;
       // We kunnen niet truncate aangezien de foreign keys restrictions dit tegenhouden.
-      sql =  " DELETE FROM cart_order WHERE 1 = 1; ALTER TABLE cart_order AUTO_INCREMENT = 1;  ";
+      sql = " DELETE FROM cart_order WHERE 1 = 1; ALTER TABLE cart_order AUTO_INCREMENT = 1;  ";
       sql += " DELETE FROM cart WHERE 1 = 1; ALTER TABLE cart AUTO_INCREMENT = 1; ";
       sql += " DELETE FROM customer WHERE 1 = 1; ALTER TABLE customer AUTO_INCREMENT = 1; ";
       sql += " DELETE FROM product WHERE 1 = 1; ALTER TABLE product AUTO_INCREMENT = 1; ";
@@ -25,9 +25,9 @@ var reset = {
       sql += `INSERT INTO product (product_id, product_name, unit_price, lc_dt, cr_dt) VALUES
           (NULL, "Jong belegen kaas", 1.00, NOW(), NOW()),
           (NULL, "Oude kaas", 1.00, NOW(), NOW() ),
-          (null, "Overjarig kaas", 1.00, NOW(), NOW()),
+          (null, "Schimmel kaas", 1.00, NOW(), NOW()),
           (null, "Worst", 1.99, NOW(), NOW()),
-          (null, "Nog meer Worst", 1.27, NOW(), NOW()),
+          (null, "Botherhammenworst", 1.27, NOW(), NOW()),
           (null, "Cola 1L", 0.88, NOW(), NOW()),
           (null, "Cola 2L", 1.60, NOW(), NOW()),
           (null, "Sinas 1L", 0.88, NOW(), NOW()),

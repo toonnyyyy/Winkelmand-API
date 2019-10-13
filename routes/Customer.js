@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var customer=require('../models/customer');
  
-router.get('/:id?',function(req,res){
+router.get('/customer/:id?',function(req,res){
   if(req.params.id){
       customer.getCustomerById(req.params.id,function(err,rows){     
           if(err) {
@@ -35,7 +35,7 @@ router.get('/:id?',function(req,res){
    }
 });
  
-router.post('/',function(req,res){
+router.post('/customer',function(req,res){
   if(req.body.email == "" || req.body.name == ""){
     return res.status(400).send({
       message: 'Missing email or name.'
@@ -55,7 +55,7 @@ router.post('/',function(req,res){
   }
 });
 
-router.put('/:id',function(req,res){ 
+router.put('/customer/:id',function(req,res){ 
   customer.updateCustomer(req.params.id,req.body,function(err,rows){     
     if(req.body.email == "" || req.body.name == ""){
       return res.status(400).send({
@@ -82,7 +82,7 @@ router.put('/:id',function(req,res){
   });
 });
  
-router.delete('/:id',function(req,res){
+router.delete('/customer/:id',function(req,res){
   customer.deleteCustomer(req.params.id,function(err,rows){
     if(err){
       return res.status(500).send({

@@ -49,7 +49,7 @@ var product = {
       return db.query (`DELETE FROM cart_order WHERE product_id = ?`, [id], callback);
 	},
 
-	getCartIds:function(id, callback) {
+	getCartIds:function(callback) {
 		return db.query(
 		`SELECT c.cart_id
         FROM cart c LEFT JOIN cart_order co

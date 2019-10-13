@@ -2,13 +2,13 @@ var express = require('express');
 var router = express.Router();
 var reset = require('../models/reset');
 
-router.delete('/',function(req,res,next){
-   reset.resetAll(function(err,rows){
-      if(err){
+router.delete('/', function (res) {
+   reset.resetAll(function (err) {
+      if (err) {
          res.json(err);
       } else {
-         reset.addDummyData( function(err, rows) {
-            if(err){
+         reset.addDummyData(function (err) {
+            if (err) {
                res.json(err);
             } else {
                return res.status(200).send({
@@ -22,4 +22,4 @@ router.delete('/',function(req,res,next){
 
 
 
-module.exports=router;
+module.exports = router;
