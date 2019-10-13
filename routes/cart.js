@@ -7,20 +7,23 @@ router.get('/customer/:id?', function (req, res) {
   if (req.params.id) {
     cart.getCartByCustomerId(req.params.id, function (err, rows) {
       if (err) {
-        res.json(err);
+        return res.status(500).send({
+          message: 'Error in de database.'
+        });
       }
       if (rows == 0) {
         return res.status(404).send({
           message: 'This customer does not have shoppingcarts.'
         });
       } else {
+        // return the correct get result
         res.json(rows);
       }
     });
   } else {
     // no customer id specified
     return res.status(404).send({
-      message: 'No id specified'
+      message: 'No id specified.'
     });
   }
 });
@@ -30,13 +33,16 @@ router.get('/:id?', function (req, res) {
   if (req.params.id) {
     cart.getCartByCartId(req.params.id, function (err, rows) {
       if (err) {
-        res.json(err);
+        return res.status(500).send({
+          message: 'Error in de database.'
+        });
       }
       if (rows == 0) {
         return res.status(404).send({
-          message: 'No cart found'
+          message: 'No cart found.'
         });
       } else {
+        // return the correct get result
         res.json(rows);
       }
     });
@@ -44,7 +50,7 @@ router.get('/:id?', function (req, res) {
   } else {
     // no cart id specified
     return res.status(404).send({
-      message: 'No id specified'
+      message: 'No id specified.'
     });
   }
 });
@@ -78,14 +84,15 @@ router.post('/', function (req, res) {
         cart.setAmountandTotalPriceIfProductExistsInCart(req.body, function (err, rows) {
           if (err) {
             return res.status(500).send({
-              message: 'Error in de database'
+              message: 'Error in de database.'
             });
             // mysql throws a warning when amount is not valid
           } else if (rows.warningCount == 1) {
             return res.status(404).send({
-              message: 'No valid input for amount'
+              message: 'No valid input for amount.'
             });
           } else if (rows.affectedRows > 0) {
+            // change amount instead if product already exists
             return res.status(200).send({
               message: 'Product alreay exists in the cart, so the amount and total price was changed.'
             });
@@ -94,11 +101,11 @@ router.post('/', function (req, res) {
         // if product or shoppingcart does not exists
       } else if (err.code == 'ER_NO_REFERENCED_ROW_2') {
         return res.status(404).send({
-          message: 'No valid input for product id or cart id'
+          message: 'No valid input for product id or cart id.'
         });
       } else {
         return res.status(500).send({
-          message: 'Error in de database'
+          message: 'Error in de database.'
         });
       }
     } else {
@@ -109,7 +116,7 @@ router.post('/', function (req, res) {
         });
       } else {
         return res.status(500).send({
-          message: 'Error in de database'
+          message: 'Error in de database.'
         });
       }
     }
@@ -123,28 +130,28 @@ router.put('/', function (req, res) {
       // if product or shoppingcart does not exists
       if (err.code == 'ER_NO_REFERENCED_ROW_2') {
         return res.status(404).send({
-          message: 'No valid input for product id or cart id'
+          message: 'No valid input for product id or cart id.'
         });
         // mysql throws a warning when amount is not valid
       } else if (rows.warningCount == 1) {
         return res.status(404).send({
-          message: 'No valid input for amount'
+          message: 'No valid input for amount.'
         });
       } else {
         return res.status(500).send({
-          message: 'Error in de database'
+          message: 'Error in de database.'
         });
       }
     } else {
       //cart order has been succesfully updated
       if (rows.affectedRows > 0) {
         return res.status(200).send({
-          message: 'Cart has been succesfully updated'
+          message: 'Cart has been succesfully updated.'
         });
       } else {
         // mysql sets affected rows to zero when input is incorrect
         return res.status(404).send({
-          message: 'No valid input'
+          message: 'No valid input.'
         });
       }
     }
@@ -157,7 +164,7 @@ router.delete('/:id?', function (req, res) {
     cart.deleteCartByCartId(req.params.id, function (err, rows) {
       if (err) {
         return res.status(500).send({
-          message: 'Error in de database'
+          message: 'Error in de database.'
         });
       } else {
         if (rows.affectedRows > 0) {
@@ -166,7 +173,7 @@ router.delete('/:id?', function (req, res) {
           });
         } else {
           return res.status(404).send({
-            message: 'Cart id not found'
+            message: 'Cart id not found.'
           });
         }
       }
@@ -174,7 +181,7 @@ router.delete('/:id?', function (req, res) {
   } else {
     // No paramater given
     return res.status(404).send({
-      message: 'No parameter given'
+      message: 'No parameter given.'
     });
   }
 });
@@ -187,7 +194,7 @@ router.delete('/:cart_id?/product/:product_id?', function (req, res) {
       if (err) {
         console.log(err)
         return res.status(500).send({
-          message: 'Error in de database'
+          message: 'Error in de database.'
         });
       } else {
         if (rows.affectedRows > 0) {
@@ -196,7 +203,7 @@ router.delete('/:cart_id?/product/:product_id?', function (req, res) {
           });
         } else {
           return res.status(404).send({
-            message: 'Cart id or product id not found'
+            message: 'Cart id or product id not found.'
           });
         }
       }
@@ -204,7 +211,7 @@ router.delete('/:cart_id?/product/:product_id?', function (req, res) {
   } else {
     // No paramater given
     return res.status(404).send({
-      message: 'No parameter given'
+      message: 'No parameter given.'
     });
   }
 });
