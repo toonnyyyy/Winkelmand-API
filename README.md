@@ -13,6 +13,12 @@ Extra's:
 
 # Bronnen & Links
 
+Eigen links
+- URL Web app: http://ig03winkelmand.azurewebsites.net/shoppingcart/api/v1/
+- URL Git repo: https://github.com/pandazii/Winkelmand-API/
+- URL scrumboard: https://github.com/pandazii/Winkelmand-API/projects/1
+- Toegangsgegevens database:
+
 Git
 - https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control
 - https://www.git-tower.com/learn/git/faq/delete-remote-branch
