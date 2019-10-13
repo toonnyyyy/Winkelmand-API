@@ -65,7 +65,7 @@ router.post('/customer/:id?', function (req, res) {
       } else {
         if (rows.affectedRows > 0) {
           return res.status(200).send({
-            message: 'Cart has been succesfully set.'
+            message: 'Cart has been successfully set.'
           });
         }
       }
@@ -99,14 +99,14 @@ router.post('/cart', function (req, res) {
             } else if (rows.affectedRows > 0) {
               // change amount instead if product already exists
               return res.status(200).send({
-                message: 'Product alreay exists in the cart, so the amount and total price was changed.'
+                message: 'Product already exists in the cart, so the amount and total price was changed.'
               });
             }
           })
           // if product or shoppingcart does not exists
         } else if (err.code == 'ER_NO_REFERENCED_ROW_2') {
           return res.status(404).send({
-            message: 'Product or cart does not exist'
+            message: 'Product or cart does not exist.'
           });
         } else {
           return res.status(500).send({
@@ -117,7 +117,7 @@ router.post('/cart', function (req, res) {
         // if product does not exists in the cart
         if (rows.affectedRows > 0) {
           return res.status(200).send({
-            message: 'Product and amount succesfully added to cart.'
+            message: 'Product and amount successfully added to cart.'
           });
         } else {
           return res.status(500).send({
@@ -156,10 +156,10 @@ router.put('/cart', function (req, res) {
           });
         }
       } else {
-        //cart order has been succesfully updated
+        //cart order has been successfully updated
         if (rows.affectedRows > 0) {
           return res.status(200).send({
-            message: 'Cart has been succesfully updated.'
+            message: 'Cart has been successfully updated.'
           });
         } else {
           // mysql sets affected rows to zero when input is incorrect
@@ -183,7 +183,7 @@ router.delete('/cart/:id?', function (req, res) {
       } else {
         if (rows.affectedRows > 0) {
           return res.status(200).send({
-            message: 'Cart has been succesfully deleted.'
+            message: 'Cart has been successfully deleted.'
           });
         } else {
           return res.status(404).send({
@@ -213,7 +213,7 @@ router.delete('/cart/:cart_id?/product/:product_id?', function (req, res) {
       } else {
         if (rows.affectedRows > 0) {
           return res.status(200).send({
-            message: 'Cart order has been succesfully deleted.'
+            message: 'Cart order has been successfully deleted.'
           });
         } else {
           return res.status(404).send({
