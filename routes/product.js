@@ -31,33 +31,45 @@ router.get('/:id?',function(req,res,next){
 });
 
 router.post('/',function(req,res,next){
-   product.addProduct(req.body,function(err){
-      if(err){
-         res.json(err);
-      } else{
-         return res.status(200).send({
-            message: 'Product has been succesfully created.'
-         });
-      }
-   });
+    if(req.body.product_name == "" || req.body.unit_price == ""){
+      return res.status(400).send({
+        message: 'Missing name or price.'
+      });
+    } else { 
+     product.addProduct(req.body,function(err){
+        if(err){
+           res.json(err);
+        } else{
+           return res.status(200).send({
+              message: 'Product has been succesfully created.'
+           });
+        }
+     });
+   }
 });
 
 router.put('/:id',function(req,res,next){
-   product.updateProduct(req.params.id,req.body,function(err,rows){
-      if(err){
-         res.json(err);
-      } else {
-         if(rows.affectedRows == 0) {
-            return res.status(404).send({
-               message: 'This product does not exist.'
-            });
-         } else {
-            return res.status(200).send({
-               message: 'Product has been succesfully updated.'
-            });
-         }
-      }
-   });
+  if(req.body.product_name == "" || req.body.product_price == ""){
+      return res.status(400).send({
+        message: 'Missing name or price.'
+      });
+  } else{
+     product.updateProduct(req.params.id,req.body,function(err,rows){
+        if(err){
+           res.json(err);
+        } else {
+           if(rows.affectedRows == 0) {
+              return res.status(404).send({
+                 message: 'This product does not exist.'
+              });
+           } else {
+              return res.status(200).send({
+                 message: 'Product has been succesfully updated.'
+              });
+           }
+        }
+     });
+   }
 });
 
 router.delete('/:id',function(req,res,next){
