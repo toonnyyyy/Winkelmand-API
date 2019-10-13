@@ -5,8 +5,8 @@ Een winkelmand API in NodeJs voor een webshop
 #Functionaliteiten
 - [X] Klant (CRUD)
 - [X] Product (CRUD)
-- [ ] Winkelwagen (CRUD)
-- [ ] Bestelling (CRUD)
+- [X] Winkelwagen (CRUD)
+- [X] Bestelling (CRUD)
 - [X] Reset functie
 
 Extra's:
