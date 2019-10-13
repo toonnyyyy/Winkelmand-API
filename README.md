@@ -17,6 +17,7 @@ Eigen links
 - URL Web app: http://ig03winkelmand.azurewebsites.net/shoppingcart/api/v1/
 - URL Git repo: https://github.com/pandazii/Winkelmand-API/
 - URL scrumboard: https://github.com/pandazii/Winkelmand-API/projects/1
+- URL Tests: https://www.getpostman.com/collections/e2e9bd354f641b538ba0
 - Toegangsgegevens database:
 
 Git
